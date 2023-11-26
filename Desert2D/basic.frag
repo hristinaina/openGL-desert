@@ -5,5 +5,5 @@ uniform vec3 color;
 
 void main()
 {
-	outCol = vec4(color, 1.0); // Sky color
+	outCol = vec4(color, 1.0); 
 }
