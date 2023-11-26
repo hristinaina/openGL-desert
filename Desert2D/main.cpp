@@ -7,9 +7,13 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "helper.h"
 
+
+unsigned desertVAO, desertVBO;
 
 GLFWwindow* initWindow() {
     if (!glfwInit())
@@ -49,10 +53,52 @@ GLFWwindow* initWindow() {
 
 void createDesert() {
     // todo add vertices, VAO and VBO
+    // Desert vertices
+    float desertVertices[] = {
+        -1.0, 0.0,
+         1.0, 0.0,
+        -1.0, -1.0,
+         1.0, -1.0
+    };
+
+    // Create Vertex Array Object and Vertex Buffer Object
+    glGenVertexArrays(1, &desertVAO);
+    glGenBuffers(1, &desertVBO);
+
+    // Bind the Vertex Array Object
+    glBindVertexArray(desertVAO);
+
+    // Bind and initialize the Vertex Buffer Object
+    glBindBuffer(GL_ARRAY_BUFFER, desertVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(desertVertices), desertVertices, GL_STATIC_DRAW);
+
+    // Set attribute pointers
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+
+    // Unbind VAO and VBO
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }
 
-void renderDesert() {
-    // here goes the logic for the loop
+// here goes the logic for the loop
+void renderDesert(unsigned int shaderProgram) {
+     // Use the same shader program for the desert
+    glUseProgram(shaderProgram);
+    int color = glGetUniformLocation(shaderProgram, "color");
+
+    // Bind the Vertex Array Object
+    glBindVertexArray(desertVAO);
+
+    // Draw the desert
+    glUniform3f(color, 0.949, 0.733, 0.4);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Unbind VAO
+    glBindVertexArray(0);
+
+    // Unuse the shader program
+    glUseProgram(0);
 }
 
 
@@ -63,7 +109,8 @@ int main(void)
     createDesert();
     //todo add other create functions here...
 
-    //unsigned int unifiedShader = createShader("basic.vert", "basic.frag");
+    unsigned int basicShader = createShader("basic.vert", "basic.frag");
+    glClearColor(0.506, 0.922, 1.0, 1.0);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -75,7 +122,7 @@ int main(void)
         
         glClear(GL_COLOR_BUFFER_BIT);
 
-        renderDesert();
+        renderDesert(basicShader);
         //todo render what you have created
 
         glfwSwapBuffers(window);
@@ -84,7 +131,9 @@ int main(void)
 
 
     //todo delete and deallcoate memory
-    //glDeleteProgram(unifiedShader);
+    glDeleteBuffers(1, &desertVBO);
+    glDeleteVertexArrays(1, &desertVAO);
+    glDeleteProgram(basicShader);
 
     glfwTerminate();
     return 0;
