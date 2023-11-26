@@ -95,8 +95,7 @@ int main(void)
 
 
     //todo delete and deallcoate memory
-    //glDeleteBuffers(1, &desertVBO);
-    //glDeleteVertexArrays(1, &desertVAO);
+    DeleteDesertVariables();
     glDeleteProgram(basicShader);
 
     glfwTerminate();

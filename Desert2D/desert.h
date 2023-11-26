@@ -12,3 +12,5 @@ void renderSmallPyramids(unsigned int shaderProgram);
 
 void renderBigPyramid(unsigned int shaderProgram, float bigPyramidColor);
 
+void DeleteDesertVariables();
+

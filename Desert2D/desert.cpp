@@ -161,3 +161,12 @@ void renderBigPyramid(unsigned int shaderProgram, float bigPyramidColor) {
     // Unuse the shader program
     glUseProgram(0);
 }
+
+void DeleteDesertVariables() {
+    glDeleteBuffers(1, &desertVBO);
+    glDeleteVertexArrays(1, &desertVAO);
+    glDeleteBuffers(1, &smallPyramidsVBO);
+    glDeleteVertexArrays(1, &smallPyramidsVAO);
+    glDeleteBuffers(1, &bigPyramidVBO);
+    glDeleteVertexArrays(1, &bigPyramidVAO);
+}
