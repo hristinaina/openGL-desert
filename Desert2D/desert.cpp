@@ -49,12 +49,12 @@ void createDesert() {
 
 void createSmallPyramids() {
     float pyramidVertices[] = {
-    -0.96, -0.3,
-    -0.56, -0.3,
+    -0.96, -0.2,
+    -0.56, -0.2,
     -0.76, 0.3,
-    0.6, -0.15,
-    0.9, -0.15,
-    0.75, 0.25,
+    0.6, -0.12,
+    0.9, -0.12,
+    0.75, 0.28,
     };
 
     // Create Vertex Array Object and Vertex Buffer Object
@@ -114,7 +114,7 @@ void renderDesert(unsigned int shaderProgram) {
     glBindVertexArray(desertVAO);
 
     // Draw the desert
-    glUniform3f(color, 0.988, 0.875, 0.416);
+    glUniform4f(color, 0.988, 0.875, 0.416, 1.0);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
     // Unbind VAO
@@ -133,7 +133,7 @@ void renderSmallPyramids(unsigned int shaderProgram) {
     glBindVertexArray(smallPyramidsVAO);
 
     // Draw the desert
-    glUniform3f(color, 0.85, 0.737, 0.204);
+    glUniform4f(color, 0.85, 0.737, 0.204, 1.0);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     // Unbind VAO
@@ -152,7 +152,7 @@ void renderBigPyramid(unsigned int shaderProgram, float bigPyramidColor) {
     glBindVertexArray(bigPyramidVAO);
 
     // Draw the desert
-    glUniform3f(color, 0.85, bigPyramidColor, 0.204);
+    glUniform4f(color, 0.85, bigPyramidColor, 0.204, 1.0);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     // Unbind VAO

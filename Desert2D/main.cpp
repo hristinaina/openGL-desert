@@ -12,6 +12,7 @@
 
 #include "helper.h"
 #include "desert.h"
+#include "oasis.h"
 
 float bigPyramidColor = 0.737;  //sets the green color value. Lesser the value, stronger the red color
 float colorSpeedChange = 0.005;
@@ -58,6 +59,7 @@ int main(void)
     createDesert();
     createSmallPyramids();
     createBigPyramid();
+    createWater(0.37, 0.15);
     //todo add other create functions here...
 
     unsigned int basicShader = createShader("basic.vert", "basic.frag");
@@ -88,6 +90,7 @@ int main(void)
         renderDesert(basicShader);
         renderSmallPyramids(basicShader);
         renderBigPyramid(basicShader, bigPyramidColor);
+        renderWater(basicShader);
         //todo render what you have created
 
         glfwSwapBuffers(window);
