@@ -62,6 +62,7 @@ int main(void)
     createBigPyramid();
     createWater(0.37, 0.15);
     createGrass();
+    createFish();
     //todo add other create functions here...
 
     unsigned int basicShader = createShader("basic.vert", "basic.frag");
@@ -106,6 +107,8 @@ int main(void)
         renderWater(basicShader);
         if (showTexture)
             renderGrass(textureShader);
+        else
+            renderFish(textureShader);
         //todo render what you have created
 
         glfwSwapBuffers(window);

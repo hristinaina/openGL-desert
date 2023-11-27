@@ -7,4 +7,8 @@ void createGrass();
 
 void renderGrass(unsigned int shaderProgram);
 
+void createFish();
+
+void renderFish(unsigned int shaderProgram);
+
 void DeleteOasisVariables();

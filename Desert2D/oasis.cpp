@@ -17,8 +17,12 @@
 
 unsigned int waterVAO, waterVBO;
 unsigned int grassVAO, grassVBO;
+unsigned int fishVAO, fishVBO;
 unsigned grassTexture;
+unsigned fishTexture;
 #define CRES 300 
+float fishX = 0.0f;  // Initial X position of the fish
+float speed = 0.2f;  // Speed of the fish movement
 
 static unsigned loadImageToTexture(const char* filePath); //Ucitavanje teksture, izdvojeno u funkciju
 
@@ -62,6 +66,47 @@ void createGrass() {
 
 }
 
+
+void createFish() {
+
+    float vertices[] =
+    {   //X    Y      S    T 
+        -0.1, -0.7,   0.0, 0.0,  // bottom left
+        0.1, -0.7,    1.0, 0.0,    // bottom right
+        -0.1, -0.5,    0.0, 1.0,  // top left
+        0.1, -0.5,    1.0, 1.0  // top right
+    };
+
+    unsigned int stride = (2 + 2) * sizeof(float);
+
+    glGenVertexArrays(1, &fishVAO);
+    glGenBuffers(1, &fishVBO);
+
+    glBindVertexArray(fishVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, fishVBO);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, (void*)(2 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
+
+    //Texture
+    fishTexture = loadImageToTexture("res/fish.png");
+    glBindTexture(GL_TEXTURE_2D, fishTexture); //to set up the texture
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);   //GL_NEAREST, GL_LINEAR
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+}
+
 void createWater(float width, float height) {
     float centerX = 0.0;
     float centerY = -0.6;
@@ -93,9 +138,33 @@ void renderGrass(unsigned int shaderProgram) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glUseProgram(shaderProgram);
+    float pos = glGetUniformLocation(shaderProgram, "position");
     glBindVertexArray(grassVAO);
 
+    glUniform1f(pos, 0);
     glBindTexture(GL_TEXTURE_2D, grassTexture);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindVertexArray(0);
+
+    glUseProgram(0);
+    glDisable(GL_BLEND);
+}
+
+//todo dodati uniformu za promjenu lokacije
+void renderFish(unsigned int shaderProgram) {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    fishX = sin(glfwGetTime() * speed) / 4;  //dozovliti da ide od 0 do 0.3 pa onda obrunto
+
+    glUseProgram(shaderProgram);
+    float pos = glGetUniformLocation(shaderProgram, "position");
+    glBindVertexArray(fishVAO);
+
+    glUniform1f(pos, fishX);
+    glBindTexture(GL_TEXTURE_2D, fishTexture);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
     glBindTexture(GL_TEXTURE_2D, 0);
