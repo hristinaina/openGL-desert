@@ -65,6 +65,7 @@ int main(void)
     createGrass();
     createFish();
     createSun(0.0, 0.0, 0.07, 0.1);
+    createMoon(0.0, 0.0, 0.07, 0.1);
     //todo add other create functions here...
 
     unsigned int basicShader = createShader("basic.vert", "basic.frag");
@@ -104,6 +105,7 @@ int main(void)
             showTexture = true;
         }
 
+        renderMoon(rotationShader);
         renderSun(rotationShader);
         renderDesert(basicShader);
         renderSmallPyramids(basicShader);
@@ -122,6 +124,7 @@ int main(void)
     //todo delete and deallcoate memory
     DeleteDesertVariables();
     DeleteOasisVariables();
+    DeleteSkyVariables();
     glDeleteProgram(basicShader);
 
     glfwTerminate();
