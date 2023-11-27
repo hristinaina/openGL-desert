@@ -102,6 +102,7 @@ int main(void)
 
     //todo delete and deallcoate memory
     DeleteDesertVariables();
+    DeleteOasisVariables();
     glDeleteProgram(basicShader);
 
     glfwTerminate();

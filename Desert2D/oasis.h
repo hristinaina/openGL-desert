@@ -6,3 +6,5 @@ void renderWater(unsigned int shaderProgram);
 void createGrass();
 
 void renderGrass(unsigned int shaderProgram);
+
+void DeleteOasisVariables();

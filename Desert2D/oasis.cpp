@@ -35,58 +35,36 @@ void createGrass() {
     unsigned int stride = (2 + 2) * sizeof(float);
 
     glGenVertexArrays(1, &grassVAO);
-    glBindVertexArray(grassVAO);
-
     glGenBuffers(1, &grassVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+    glBindVertexArray(grassVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (void*)0);
     glEnableVertexAttribArray(0);
+
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, (void*)(2 * sizeof(float)));
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     glBindVertexArray(0);
 
-    //Tekstura
-    grassTexture = loadImageToTexture("res/grass_texture.png"); //Ucitavamo teksturu
-    glBindTexture(GL_TEXTURE_2D, grassTexture); //Podesavamo teksturu
-    glGenerateMipmap(GL_TEXTURE_2D); //Generisemo mipmape 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);//S = U = X    GL_REPEAT, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_BORDER
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);// T = V = Y
+    //Texture
+    grassTexture = loadImageToTexture("res/grass_texture.png"); 
+    glBindTexture(GL_TEXTURE_2D, grassTexture); //to set up the texture
+    glGenerateMipmap(GL_TEXTURE_2D); 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);   //GL_NEAREST, GL_LINEAR
     glBindTexture(GL_TEXTURE_2D, 0);
 
 }
 
-void renderGrass(unsigned int shaderProgram) {
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    unsigned uTexLoc = glGetUniformLocation(shaderProgram, "uTex");
-    glUniform1i(uTexLoc, 0); 
-
-    glUseProgram(shaderProgram);
-    glBindVertexArray(grassVAO);
-
-    glActiveTexture(GL_TEXTURE0); //tekstura koja se bind-uje nakon ovoga ce se koristiti sa SAMPLER2D uniformom u sejderu koja odgovara njenom indeksu
-    glBindTexture(GL_TEXTURE_2D, grassTexture);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBindVertexArray(0);
-
-    glUseProgram(0);
-    glDisable(GL_BLEND);
-}
-
 void createWater(float width, float height) {
     float centerX = 0.0;
     float centerY = -0.6;
-    glGenVertexArrays(1, &waterVAO);
-    glGenBuffers(1, &waterVBO);
 
     float circle[2 * CRES + 4];
 
@@ -99,11 +77,32 @@ void createWater(float width, float height) {
         circle[2 * i + 3] = centerY + sin((3.141592 / 180) * (i * 360 / CRES)) * height; // Yi
     }
 
+    glGenVertexArrays(1, &waterVAO);
+    glGenBuffers(1, &waterVBO);
+
     glBindVertexArray(waterVAO);
     glBindBuffer(GL_ARRAY_BUFFER, waterVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(circle), circle, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+}
+
+void renderGrass(unsigned int shaderProgram) {
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glUseProgram(shaderProgram);
+    glBindVertexArray(grassVAO);
+
+    glBindTexture(GL_TEXTURE_2D, grassTexture);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindVertexArray(0);
+
+    glUseProgram(0);
+    glDisable(GL_BLEND);
 }
 
 void renderWater(unsigned int shaderProgram) {
@@ -116,7 +115,7 @@ void renderWater(unsigned int shaderProgram) {
     // Bind the Vertex Array Object
     glBindVertexArray(waterVAO);
 
-    // Draw the desert
+    // Draw
     glUniform4f(color, 0.365, 0.616, 0.871, 0.8);
     glDrawArrays(GL_TRIANGLE_FAN, 0, CRES + 2);
 
@@ -126,6 +125,14 @@ void renderWater(unsigned int shaderProgram) {
     // Unuse the shader program
     glUseProgram(0);
     glDisable(GL_BLEND);
+}
+
+void DeleteOasisVariables() {
+    glDeleteBuffers(1, &waterVBO);
+    glDeleteVertexArrays(1, &waterVAO);
+    glDeleteBuffers(1, &grassVBO);
+    glDeleteVertexArrays(1, &grassVAO);
+    glDeleteTextures(1, &grassTexture);
 }
 
 static unsigned loadImageToTexture(const char* filePath) {
