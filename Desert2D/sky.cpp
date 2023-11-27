@@ -14,20 +14,9 @@
 #define CRES 300 
 unsigned sunVAO, sunVBO;
 
-//todo extract this funxtion to another (helper) file
-float* createCircle(float centerX, float centerY, float width, float height) {
-    float circle[2 * CRES + 4];
+float r = 0.8;      //Poluprecnik kruznice po kojoj se trougao krece, mora biti manji od najmanje apsolutne vrednosti y koordinate temena
+float rotationSpeed = 0.1;
 
-    // Add the center vertex
-    circle[0] = centerX;
-    circle[1] = centerY;
-
-    for (int i = 0; i <= CRES; i++) {
-        circle[2 * i + 2] = centerX + cos((3.141592 / 180) * (i * 360 / CRES)) * width;  // Xi
-        circle[2 * i + 3] = centerY + sin((3.141592 / 180) * (i * 360 / CRES)) * height; // Yi
-    }
-    return circle;
-}
 
 void createSun(float centerX, float centerY, float width, float height) {
     float circle[2 * CRES + 4];
@@ -64,15 +53,17 @@ void createSun(float centerX, float centerY, float width, float height) {
 void renderSun(unsigned int shaderProgram) {
     glUseProgram(shaderProgram);
     int color = glGetUniformLocation(shaderProgram, "color");
+    unsigned int uPosLoc = glGetUniformLocation(shaderProgram, "uPos");
 
     glBindVertexArray(sunVAO);
 
     glUniform4f(color, 1.0, 0.996, 0.71, 1.0);
+    float delta = r * (sin(glfwGetTime() * rotationSpeed));
+    glUniform2f(uPosLoc, r * cos(glfwGetTime() * rotationSpeed), delta);
     glDrawArrays(GL_TRIANGLE_FAN, 0, CRES + 2);
+    glClearColor(0.361 + delta/2, 0.655 + delta/2, 0.8 + delta/2, 1.0);
 
-    // Unbind VAO
     glBindVertexArray(0);
 
-    // Unuse the shader program
     glUseProgram(0);
 }

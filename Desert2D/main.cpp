@@ -64,12 +64,13 @@ int main(void)
     createWater(0.37, 0.15);
     createGrass();
     createFish();
-    createSun(-0.8, 0.0, 0.07, 0.1);
+    createSun(0.0, 0.0, 0.07, 0.1);
     //todo add other create functions here...
 
     unsigned int basicShader = createShader("basic.vert", "basic.frag");
     unsigned int textureShader = createShader("texture.vert", "texture.frag");
-    glClearColor(0.671, 0.882, 1.0, 1.0);
+    unsigned int rotationShader = createShader("rotation.vert", "basic.frag");
+    glClearColor(0.337, 0.451, 0.51, 1.0);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -103,7 +104,7 @@ int main(void)
             showTexture = true;
         }
 
-        renderSun(basicShader);
+        renderSun(rotationShader);
         renderDesert(basicShader);
         renderSmallPyramids(basicShader);
         renderBigPyramid(basicShader, bigPyramidColor);
