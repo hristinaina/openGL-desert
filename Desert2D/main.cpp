@@ -60,9 +60,11 @@ int main(void)
     createSmallPyramids();
     createBigPyramid();
     createWater(0.37, 0.15);
+    createGrass();
     //todo add other create functions here...
 
     unsigned int basicShader = createShader("basic.vert", "basic.frag");
+    unsigned int textureShader = createShader("texture.vert", "texture.frag");
     glClearColor(0.671, 0.882, 1.0, 1.0);
 
     while (!glfwWindowShouldClose(window))
@@ -91,6 +93,7 @@ int main(void)
         renderSmallPyramids(basicShader);
         renderBigPyramid(basicShader, bigPyramidColor);
         renderWater(basicShader);
+        renderGrass(textureShader);
         //todo render what you have created
 
         glfwSwapBuffers(window);
