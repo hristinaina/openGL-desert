@@ -69,6 +69,7 @@ int main(void)
     createFish();
     createSun(0.0, 0.0, 0.07, 0.1);
     createMoon(0.0, 0.0, 0.07, 0.1);
+    createSignature();
 
     unsigned int basicShader = createShader("basic.vert", "basic.frag");
     unsigned int textureShader = createShader("texture.vert", "texture.frag");
@@ -129,6 +130,7 @@ int main(void)
         renderWater(basicShader);
         if (showTexture)
             renderGrass(textureShader);
+        renderSignature(textureShader);
 
         glfwSwapBuffers(window);
         restared = false;
