@@ -8,4 +8,8 @@ void createMoon(float centerX, float centerY, float width, float height);
 
 void renderMoon(unsigned int shaderProgram);
 
+void createStars();
+
+void renderStars(unsigned int shaderProgram);
+
 void DeleteSkyVariables();

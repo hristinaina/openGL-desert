@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-#include <GL/glew.h>
+#include "helper.h"
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -14,12 +14,53 @@
 #define CRES 300 
 unsigned sunVAO, sunVBO;
 unsigned moonVAO, moonVBO;
+unsigned starsVAO, starsVBO;
+unsigned starsTexture;
 
 float r = 0.8;      //The radiuis of the circle along which the sun/moon moves
 float rotationSpeed = 0.1;
 
 float initialTime = glfwGetTime();
 float xLast, yLast;
+
+void createStars() {
+    float vertices[] =
+    {   //X    Y      S    T 
+        -1.0, 0.0,   0.0, 0.0,  // bottom left
+        1.0, 0.0,    1.0, 0.0,    // bottom right
+        -1.0, 1.0,    0.0, 1.0,  // top left
+         1.0, 1.0,    1.0, 1.0  // top right
+    };
+
+    unsigned int stride = (2 + 2) * sizeof(float);
+
+    glGenVertexArrays(1, &starsVAO);
+    glGenBuffers(1, &starsVBO);
+
+    glBindVertexArray(starsVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, starsVBO);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, (void*)(2 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
+
+    //Texture
+    starsTexture = loadImageToTexture("res/stars.png");
+    glBindTexture(GL_TEXTURE_2D, starsTexture); //to set up the texture
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);   //GL_NEAREST, GL_LINEAR
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+}
 
 void createSun(float centerX, float centerY, float width, float height) {
     float circle[2 * CRES + 4];
@@ -75,6 +116,25 @@ void createMoon(float centerX, float centerY, float width, float height) {
     glBindVertexArray(0);
 }
 
+void renderStars(unsigned int shaderProgram) {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glUseProgram(shaderProgram);
+    float pos = glGetUniformLocation(shaderProgram, "position");
+    glBindVertexArray(starsVAO);
+
+    glUniform1f(pos, 0);
+    glBindTexture(GL_TEXTURE_2D, starsTexture);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindVertexArray(0);
+
+    glUseProgram(0);
+    glDisable(GL_BLEND);
+}
+
 void updateVariables(float paused, float restared) {
     float ydelta = r * (sin((glfwGetTime() - initialTime) * rotationSpeed));
     float xdelta = r * (cos((glfwGetTime() - initialTime) * rotationSpeed));
@@ -126,4 +186,7 @@ void DeleteSkyVariables() {
     glDeleteVertexArrays(1, &sunVAO);
     glDeleteBuffers(1, &moonVBO);
     glDeleteVertexArrays(1, &moonVAO);
+    glDeleteBuffers(1, &starsVBO);
+    glDeleteVertexArrays(1, &starsVAO);
+    glDeleteTextures(1, &starsTexture);
 }

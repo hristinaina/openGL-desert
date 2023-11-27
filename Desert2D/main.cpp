@@ -60,6 +60,7 @@ int main(void)
 {
     GLFWwindow* window = initWindow();
     
+    createStars();
     createDesert();
     createSmallPyramids();
     createBigPyramid();
@@ -68,7 +69,6 @@ int main(void)
     createFish();
     createSun(0.0, 0.0, 0.07, 0.1);
     createMoon(0.0, 0.0, 0.07, 0.1);
-    //todo add other create functions here...
 
     unsigned int basicShader = createShader("basic.vert", "basic.frag");
     unsigned int textureShader = createShader("texture.vert", "texture.frag");
@@ -118,6 +118,7 @@ int main(void)
             paused = false;
         }
 
+        renderStars(textureShader);
         renderSun(rotationShader, paused, restared);
         renderMoon(rotationShader);
         renderDesert(basicShader);
@@ -128,14 +129,11 @@ int main(void)
         renderWater(basicShader);
         if (showTexture)
             renderGrass(textureShader);
-        //todo render what you have created
 
         glfwSwapBuffers(window);
         restared = false;
     }
 
-
-    //todo delete and deallcoate memory
     DeleteDesertVariables();
     DeleteOasisVariables();
     DeleteSkyVariables();

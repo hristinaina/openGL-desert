@@ -4,13 +4,10 @@
 #include <fstream>
 #include <sstream>
 
-#include <GL/glew.h>
+#include "helper.h"
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
 #include "oasis.h"
 
@@ -23,8 +20,6 @@ unsigned fishTexture;
 #define CRES 300 
 float fishX = 0.0f;  // Initial X position of the fish
 float speed = 0.2f;  // Speed of the fish movement
-
-static unsigned loadImageToTexture(const char* filePath); //Ucitavanje teksture, izdvojeno u funkciju
 
 void createGrass() {
 
@@ -205,40 +200,4 @@ void DeleteOasisVariables() {
     glDeleteBuffers(1, &fishVBO);
     glDeleteVertexArrays(1, &fishVAO);
     glDeleteTextures(1, &fishTexture);
-}
-
-static unsigned loadImageToTexture(const char* filePath) {
-    int TextureWidth;
-    int TextureHeight;
-    int TextureChannels;
-    unsigned char* ImageData = stbi_load(filePath, &TextureWidth, &TextureHeight, &TextureChannels, 0);
-    if (ImageData != NULL)
-    {
-        //Slike se osnovno ucitavaju naopako pa se moraju ispraviti da budu uspravne
-        stbi__vertical_flip(ImageData, TextureWidth, TextureHeight, TextureChannels);
-
-        // Provjerava koji je format boja ucitane slike
-        GLint InternalFormat = -1;
-        switch (TextureChannels) {
-        case 1: InternalFormat = GL_RED; break;
-        case 3: InternalFormat = GL_RGB; break;
-        case 4: InternalFormat = GL_RGBA; break;
-        default: InternalFormat = GL_RGB; break;
-        }
-
-        unsigned int Texture;
-        glGenTextures(1, &Texture);
-        glBindTexture(GL_TEXTURE_2D, Texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, InternalFormat, TextureWidth, TextureHeight, 0, InternalFormat, GL_UNSIGNED_BYTE, ImageData);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        // oslobadjanje memorije zauzete sa stbi_load posto vise nije potrebna
-        stbi_image_free(ImageData);
-        return Texture;
-    }
-    else
-    {
-        std::cout << "Textura nije ucitana! Putanja texture: " << filePath << std::endl;
-        stbi_image_free(ImageData);
-        return 0;
-    }
 }
