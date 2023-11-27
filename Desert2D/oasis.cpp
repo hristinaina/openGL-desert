@@ -30,10 +30,10 @@ void createGrass() {
 
     float vertices[] =
     {   //X    Y      S    T 
-        -0.5, -0.8,   0.0, 0.0,  // bottom left
+        -0.45, -0.8,   0.0, 0.0,  // bottom left
         0.45, -0.8,    1.0, 0.0,    // bottom right
-        -0.4, -0.45,    0.0, 1.0,  // top left
-         0.45, -0.45,    1.0, 1.0  // top right
+        -0.45, -0.4,    0.0, 1.0,  // top left
+         0.45, -0.4,    1.0, 1.0  // top right
     };
 
     unsigned int stride = (2 + 2) * sizeof(float);
@@ -185,7 +185,7 @@ void renderWater(unsigned int shaderProgram) {
     glBindVertexArray(waterVAO);
 
     // Draw
-    glUniform4f(color, 0.365, 0.616, 0.871, 0.8);
+    glUniform4f(color, 0.365, 0.616, 0.871, 0.75);
     glDrawArrays(GL_TRIANGLE_FAN, 0, CRES + 2);
 
     // Unbind VAO

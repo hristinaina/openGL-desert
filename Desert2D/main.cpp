@@ -104,11 +104,11 @@ int main(void)
         renderDesert(basicShader);
         renderSmallPyramids(basicShader);
         renderBigPyramid(basicShader, bigPyramidColor);
+        if (!showTexture)
+            renderFish(textureShader);
         renderWater(basicShader);
         if (showTexture)
             renderGrass(textureShader);
-        else
-            renderFish(textureShader);
         //todo render what you have created
 
         glfwSwapBuffers(window);
