@@ -16,6 +16,7 @@
 
 float bigPyramidColor = 0.737;  //sets the green color value. Lesser the value, stronger the red color
 float colorSpeedChange = 0.005;
+bool showTexture = true;
 
 GLFWwindow* initWindow() {
     if (!glfwInit())
@@ -89,11 +90,22 @@ int main(void)
                 bigPyramidColor += colorSpeedChange;
         }
 
+        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+        {
+            showTexture = false;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        {
+            showTexture = true;
+        }
+
         renderDesert(basicShader);
         renderSmallPyramids(basicShader);
         renderBigPyramid(basicShader, bigPyramidColor);
         renderWater(basicShader);
-        renderGrass(textureShader);
+        if (showTexture)
+            renderGrass(textureShader);
         //todo render what you have created
 
         glfwSwapBuffers(window);
