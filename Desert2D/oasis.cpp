@@ -202,6 +202,9 @@ void DeleteOasisVariables() {
     glDeleteBuffers(1, &grassVBO);
     glDeleteVertexArrays(1, &grassVAO);
     glDeleteTextures(1, &grassTexture);
+    glDeleteBuffers(1, &fishVBO);
+    glDeleteVertexArrays(1, &fishVAO);
+    glDeleteTextures(1, &fishTexture);
 }
 
 static unsigned loadImageToTexture(const char* filePath) {

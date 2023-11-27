@@ -159,6 +159,7 @@
     <ClInclude Include="desert.h" />
     <ClInclude Include="helper.h" />
     <ClInclude Include="oasis.h" />
+    <ClInclude Include="sky.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

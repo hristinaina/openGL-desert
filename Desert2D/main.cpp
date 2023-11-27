@@ -13,6 +13,7 @@
 #include "helper.h"
 #include "desert.h"
 #include "oasis.h"
+#include "sky.h"
 
 float bigPyramidColor = 0.737;  //sets the green color value. Lesser the value, stronger the red color
 float colorSpeedChange = 0.005;
@@ -63,6 +64,7 @@ int main(void)
     createWater(0.37, 0.15);
     createGrass();
     createFish();
+    createSun(-0.8, 0.0, 0.07, 0.1);
     //todo add other create functions here...
 
     unsigned int basicShader = createShader("basic.vert", "basic.frag");
@@ -101,6 +103,7 @@ int main(void)
             showTexture = true;
         }
 
+        renderSun(basicShader);
         renderDesert(basicShader);
         renderSmallPyramids(basicShader);
         renderBigPyramid(basicShader, bigPyramidColor);
