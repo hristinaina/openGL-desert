@@ -4,11 +4,20 @@ in vec2 chTex; //koordinate teksture
 out vec4 outCol;
 
 uniform sampler2D uTex; //teksturna jedinica
+uniform float alphaCh;
 
 void main()
 {
-	outCol = texture(uTex, chTex); //boja na koordinatama chTex teksture vezane na teksturnoj jedinici uTex
-	//mijesanje 2 teksture se moze raditi sa mix(T1, T2, k) funkcijom gdje su
-	//T1 i T2 pozivi texture funkcije a k koeficijent jacine druge teksture od 0 do 1 (0.3 = 70%T1 + 30%T2)
-	//mijesanje sa bojom tjemena se moze odraditi mnozenjem vektora boja i tekstura
+	vec4 texColor = texture(uTex, chTex);
+
+    // Check if the alpha value of the texture at this pixel is greater than a threshold
+    float alphaThreshold = 0.1;
+    if (texColor.a > alphaThreshold) {
+        // There is texture at this pixel
+        texColor.a = alphaCh;
+        outCol = texColor;
+    } else {
+        // No texture at this pixel, make it transparent
+        outCol = vec4(0.0, 0.0, 0.0, 0.0);
+    }
 }

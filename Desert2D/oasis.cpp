@@ -134,9 +134,11 @@ void renderGrass(unsigned int shaderProgram) {
 
     glUseProgram(shaderProgram);
     float pos = glGetUniformLocation(shaderProgram, "position");
+    float alpha = glGetUniformLocation(shaderProgram, "alphaCh");
     glBindVertexArray(grassVAO);
 
     glUniform1f(pos, 0);
+    glUniform1f(alpha, 1.0);
     glBindTexture(GL_TEXTURE_2D, grassTexture);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
@@ -156,9 +158,11 @@ void renderFish(unsigned int shaderProgram) {
 
     glUseProgram(shaderProgram);
     float pos = glGetUniformLocation(shaderProgram, "position");
+    float alpha = glGetUniformLocation(shaderProgram, "alphaCh");
     glBindVertexArray(fishVAO);
 
     glUniform1f(pos, fishX);
+    glUniform1f(alpha, 1.0);
     glBindTexture(GL_TEXTURE_2D, fishTexture);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 

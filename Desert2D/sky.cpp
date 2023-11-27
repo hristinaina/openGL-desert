@@ -26,10 +26,10 @@ float xLast, yLast;
 void createStars() {
     float vertices[] =
     {   //X    Y      S    T 
-        -1.0, 0.0,   0.0, 0.0,  // bottom left
-        1.0, 0.0,    1.0, 0.0,    // bottom right
-        -1.0, 1.0,    0.0, 1.0,  // top left
-         1.0, 1.0,    1.0, 1.0  // top right
+        -0.8, 0.0,   0.0, 0.0,  // bottom left
+        0.8, 0.0,    1.0, 0.0,    // bottom right
+        -0.8, 1.0,    0.0, 1.0,  // top left
+         0.8, 1.0,    1.0, 1.0  // top right
     };
 
     unsigned int stride = (2 + 2) * sizeof(float);
@@ -122,9 +122,11 @@ void renderStars(unsigned int shaderProgram) {
 
     glUseProgram(shaderProgram);
     float pos = glGetUniformLocation(shaderProgram, "position");
+    float alpha = glGetUniformLocation(shaderProgram, "alphaCh");
     glBindVertexArray(starsVAO);
 
     glUniform1f(pos, 0);
+    glUniform1f(alpha, -yLast - 0.2);
     glBindTexture(GL_TEXTURE_2D, starsTexture);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
@@ -158,7 +160,7 @@ void renderSun(unsigned int shaderProgram, float paused, float restared) {
     updateVariables(paused, restared);
     glUniform2f(uPosLoc, xLast , yLast);
     glDrawArrays(GL_TRIANGLE_FAN, 0, CRES + 2);
-    glClearColor(0.361 + yLast/2, 0.655 + yLast/2, 0.8 + yLast/2, 1.0);
+    glClearColor(0.243 + yLast/2, 0.435 + yLast/2, 0.529 + yLast/2, 1.0);
 
     glBindVertexArray(0);
 
