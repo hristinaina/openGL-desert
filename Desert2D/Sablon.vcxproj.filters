@@ -42,6 +42,15 @@
     <None Include="basic.vert">
       <Filter>Source Files\Shader Files</Filter>
     </None>
+    <None Include="texture.vert">
+      <Filter>Source Files\Shader Files</Filter>
+    </None>
+    <None Include="texture.frag">
+      <Filter>Source Files\Shader Files</Filter>
+    </None>
+    <None Include="rotation.vert">
+      <Filter>Source Files\Shader Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper.h">
@@ -51,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="oasis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sky.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

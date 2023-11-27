@@ -18,6 +18,8 @@ unsigned moonVAO, moonVBO;
 float r = 0.8;      //The radiuis of the circle along which the sun/moon moves
 float rotationSpeed = 0.1;
 
+float initialTime = glfwGetTime();
+float xLast, yLast;
 
 void createSun(float centerX, float centerY, float width, float height) {
     float circle[2 * CRES + 4];
@@ -73,7 +75,19 @@ void createMoon(float centerX, float centerY, float width, float height) {
     glBindVertexArray(0);
 }
 
-void renderSun(unsigned int shaderProgram) {
+void updateVariables(float paused, float restared) {
+    float ydelta = r * (sin((glfwGetTime() - initialTime) * rotationSpeed));
+    float xdelta = r * (cos((glfwGetTime() - initialTime) * rotationSpeed));
+    if (!paused) {
+        xLast = xdelta;
+        yLast = ydelta;
+    }
+    if (restared) {
+        initialTime = glfwGetTime();
+    }
+}
+
+void renderSun(unsigned int shaderProgram, float paused, float restared) {
     glUseProgram(shaderProgram);
     int color = glGetUniformLocation(shaderProgram, "color");
     unsigned int uPosLoc = glGetUniformLocation(shaderProgram, "uPos");
@@ -81,10 +95,10 @@ void renderSun(unsigned int shaderProgram) {
     glBindVertexArray(sunVAO);
 
     glUniform4f(color, 1.0, 0.996, 0.71, 1.0);
-    float delta = r * (sin(glfwGetTime() * rotationSpeed));
-    glUniform2f(uPosLoc, r * cos(glfwGetTime() * rotationSpeed), delta);
+    updateVariables(paused, restared);
+    glUniform2f(uPosLoc, xLast , yLast);
     glDrawArrays(GL_TRIANGLE_FAN, 0, CRES + 2);
-    glClearColor(0.361 + delta/2, 0.655 + delta/2, 0.8 + delta/2, 1.0);
+    glClearColor(0.361 + yLast/2, 0.655 + yLast/2, 0.8 + yLast/2, 1.0);
 
     glBindVertexArray(0);
 
@@ -99,7 +113,7 @@ void renderMoon(unsigned int shaderProgram) {
     glBindVertexArray(moonVAO);
 
     glUniform4f(color, 0.929, 0.929, 0.929, 1.0);
-    glUniform2f(uPosLoc, - r * cos(glfwGetTime() * rotationSpeed), - r * (sin(glfwGetTime() * rotationSpeed)));
+    glUniform2f(uPosLoc, - xLast, - yLast);
     glDrawArrays(GL_TRIANGLE_FAN, (CRES + 2) / 4, (CRES + 2)/2);
 
     glBindVertexArray(0);

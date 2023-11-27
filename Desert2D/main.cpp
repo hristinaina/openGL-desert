@@ -16,8 +16,10 @@
 #include "sky.h"
 
 float bigPyramidColor = 0.737;  //sets the green color value. Lesser the value, stronger the red color
-float colorSpeedChange = 0.005;
+float colorSpeedChange = 0.0005;
 bool showTexture = true;
+bool paused = false;
+bool restared = false;
 
 GLFWwindow* initWindow() {
     if (!glfwInit())
@@ -105,8 +107,19 @@ int main(void)
             showTexture = true;
         }
 
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+        {
+            paused = true;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+        {
+            restared = true;
+            paused = false;
+        }
+
+        renderSun(rotationShader, paused, restared);
         renderMoon(rotationShader);
-        renderSun(rotationShader);
         renderDesert(basicShader);
         renderSmallPyramids(basicShader);
         renderBigPyramid(basicShader, bigPyramidColor);
@@ -118,6 +131,7 @@ int main(void)
         //todo render what you have created
 
         glfwSwapBuffers(window);
+        restared = false;
     }
 
 
